@@ -8,6 +8,4 @@ require_once SHINOBI_ROOT . 'vendor/autoload.php';
 
 $shinobi = \Shinobi\Shinobi::boot(root: SHINOBI_ROOT, tag: md5(__FILE__));
 
-echo $shinobi->cfg(key: 'shinobi.version', default: 69) . "\n";
-
 $shinobi->run();

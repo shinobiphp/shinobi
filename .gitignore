@@ -1,0 +1,13 @@
+/vendor/
+/bin/shinobi.phar
+/.env
+/.idea/
+/.vscode/
+/node_modules/
+/var/
+/composer.lock
+/.gemini
+/packages/*
+packages/*
+!/packages/packages.json
+!packages/packages.json
