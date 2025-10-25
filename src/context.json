@@ -1,0 +1,41 @@
+{
+    "namespace": "shinobi",
+    "name": "Shinobi Platform",
+    "slug": "shinobi",
+    "package": "shinobiphp/shinobi",
+    "version": "1.0.0",
+    "description": "Business orchestration layer for Shinobi. Manages Components, Capabilities, Cognition subsystems, Messaging, and Context Repository.",
+    "tags": ["platform", "business", "capabilities", "messaging", "cognition", "components"],
+    "provides": [
+        "component_management",
+        "capability_execution",
+        "messaging",
+        "context_repository",
+        "cognition_integration"
+    ],
+    "depends": [
+        "core"
+    ],
+    "entrypoint": "\\Shinobi\\Shinobi\\Platform",
+    "lifecycle": {
+        "init": "boot",
+        "runtime": "run",
+        "shutdown": "shutdown"
+    },
+    "capabilities": {
+        "discoverable": true,
+        "sandboxed": true,
+        "parallel": true,
+        "multi_tenant": true
+    },
+    "security": {
+        "signed": true,
+        "trusted": false,
+        "idempotent": true
+    },
+    "metadata": {
+        "author": "Shinobi PHP",
+        "license": "proprietary",
+        "created": "2025-10-25T00:00:00Z"
+    }
+}

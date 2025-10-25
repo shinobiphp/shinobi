@@ -1,0 +1,152 @@
+{
+  "pkgs": [
+    {
+      "name": "ai",
+      "repo": "shinobiphp/ai",
+      "desc": "AI integration services for Shinobi, including ML models, natural language processing, and autonomous behavior.",
+      "provides": ["ml", "nlp", "agent"],
+      "depends": ["core", "messaging"]
+    },
+    {
+      "name": "capabilities",
+      "repo": "shinobiphp/capabilities",
+      "desc": "Bindable business logic units implementing domain-specific operations for Shinobi.",
+      "provides": ["domain_logic"],
+      "depends": ["core", "messaging", "dna"]
+    },
+    {
+      "name": "cognition",
+      "repo": "shinobiphp/cognition",
+      "desc": "Advanced cognitive modules for decision-making, planning, and semantic understanding within Shinobi.",
+      "provides": ["reasoning", "planning"],
+      "depends": ["ai", "capabilities", "core"]
+    },
+    {
+      "name": "core",
+      "repo": "shinobiphp/core",
+      "desc": "Kernel and framework foundation: bootstrapping, DI container, discovery, async execution, and low-level runtime plumbing.",
+      "provides": ["kernel", "runtime", "discovery"],
+      "depends": []
+    },
+    {
+      "name": "csr",
+      "repo": "shinobiphp/csr",
+      "desc": "Context-aware Service Repository: manages nodes, tenants, component registration, and system state.",
+      "provides": ["context_repo", "registry"],
+      "depends": ["core", "messaging"]
+    },
+    {
+      "name": "development",
+      "repo": "shinobiphp/development",
+      "desc": "Development tooling, CLI helpers, scaffolding commands, and automated workflow utilities for Shinobi.",
+      "provides": ["cli_tools", "scaffolding"],
+      "depends": ["core", "discovery"]
+    },
+    {
+      "name": "discovery",
+      "repo": "shinobiphp/discovery",
+      "desc": "Component discovery engine: scans for capabilities, services, and handlers using PHP 8.4 attributes and reflection.",
+      "provides": ["component_scanner"],
+      "depends": ["core"]
+    },
+    {
+      "name": "dna",
+      "repo": "shinobiphp/dna",
+      "desc": "System entity definitions, semantic models, protobuf schemas, and DTOs for messaging and persistence.",
+      "provides": ["entity_models", "protos"],
+      "depends": ["core"]
+    },
+    {
+      "name": "docs",
+      "repo": "shinobiphp/docs",
+      "desc": "Documentation repository for Shinobi, including API references, developer guides, and architecture diagrams.",
+      "provides": ["documentation"],
+      "depends": []
+    },
+    {
+      "name": "dojo",
+      "repo": "shinobiphp/dojo",
+      "desc": "Administrative UI and control panel for managing nodes, tenants, capabilities, and system state.",
+      "provides": ["ui", "admin_panel"],
+      "depends": ["core", "csr", "messaging"]
+    },
+    {
+      "name": "evolution",
+      "repo": "shinobiphp/evolution",
+      "desc": "Self-optimizing and adaptive algorithms for system improvement, automated refactoring, and runtime evolution.",
+      "provides": ["autonomic_system"],
+      "depends": ["core", "ai", "cognition"]
+    },
+    {
+      "name": "forge",
+      "repo": "shinobiphp/forge",
+      "desc": "Module/package creation system: builds, scaffolds, and manages Shinobi packages and components.",
+      "provides": ["package_builder"],
+      "depends": ["development", "core"]
+    },
+    {
+      "name": "graphql",
+      "repo": "shinobiphp/graphql",
+      "desc": "GraphQL API integration for Shinobi, exposing runtime queries, mutations, and subscriptions.",
+      "provides": ["graphql_api"],
+      "depends": ["core", "csr", "messaging"]
+    },
+    {
+      "name": "jonin",
+      "repo": "shinobiphp/jonin",
+      "desc": "CLI & orchestration helper for advanced Shinobi runtime tasks and automation scripting.",
+      "provides": ["cli_orchestration"],
+      "depends": ["core", "messaging", "discovery"]
+    },
+    {
+      "name": "kensho",
+      "repo": "shinobiphp/kensho",
+      "desc": "Analytics and KPI tracking modules integrated with Shinobi for monitoring and reporting system health.",
+      "provides": ["analytics", "kpi"],
+      "depends": ["core", "csr", "dna"]
+    },
+    {
+      "name": "messaging",
+      "repo": "shinobiphp/messaging",
+      "desc": "Message Moderator: orchestrates sync, async, and event-based communication between components and nodes.",
+      "provides": ["message_moderator", "outbox", "retry_logic"],
+      "depends": ["core"]
+    },
+    {
+      "name": "orchestration",
+      "repo": "shinobiphp/orchestration",
+      "desc": "High-level orchestration logic for federated nodes, task scheduling, and component execution flows.",
+      "provides": ["runtime_orchestration"],
+      "depends": ["core", "messaging", "csr"]
+    },
+    {
+      "name": "security",
+      "repo": "shinobiphp/security",
+      "desc": "Zero-trust security modules: identity verification, message signing, access control, and auditing.",
+      "provides": ["zero_trust", "signing", "auth"],
+      "depends": ["core", "messaging", "csr"]
+    },
+    {
+      "name": "sensei",
+      "repo": "shinobiphp/sensei",
+      "desc": "Command-line interface for Shinobi system management, testing, and maintenance tasks.",
+      "provides": ["cli_manager"],
+      "depends": ["core", "development", "messaging"]
+    },
+    {
+      "name": "shogun",
+      "repo": "shinobiphp/shogun",
+      "desc": "Instance orchestrator for managing multi-node deployments, load balancing, and lifecycle operations.",
+      "provides": ["node_orchestration"],
+      "depends": ["core", "messaging", "orchestration"]
+    },
+    {
+      "name": "ui",
+      "repo": "shinobiphp/ui",
+      "desc": "Front-end components, Astro islands, and Alpine.js modules for building Shinobi web interfaces.",
+      "provides": ["frontend", "web_components"],
+      "depends": ["core", "dojo"]
+    }
+  ]
+}
+
