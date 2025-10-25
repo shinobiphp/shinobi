@@ -1,5 +1,9 @@
 /vendor/
+/bin/*
+bin/*
 /bin/shinobi.phar
+!bin/shinobi
+!/bin/shinobi
 /.env
 /.idea/
 /.vscode/
