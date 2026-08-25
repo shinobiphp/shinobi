@@ -1,102 +1,124 @@
 # Current Roadmap
 
-This roadmap records direction, not promises. Items marked planned are not necessarily implemented.
+This roadmap records the current implementation order. It is deliberately biased toward a small, working Shinobi vertical slice before distributed/platform expansion.
 
-## Now
+## Now — Shinobi MVP Runtime
 
-### 1. Codex-Owned Discovery and Cache
+### 1. Application Scroll
 
-Move complete Scroll discovery responsibility behind `ScrollCodex` and add persistent cache/indexing.
-
-Requirements:
-
-- discover every supported Scroll type from configured roots
-- register every discovery origin as a named source
-- cache the resource index
-- validate cache freshness using a manifest/fingerprint
-- avoid hydration when metadata is enough
-- explicitly clear/rebuild cache
-- expose cache operations as Command Scrolls
-
-### 2. Source-Aware URI Resolution
-
-Support layered resource sources without changing logical resource identity.
+Establish `app://shinobi#1.0` as the base application composition root.
 
 Requirements:
 
-- URI source selectors using `@source`
-- dot-separated explicit source cascades using left-to-right precedence
-- implicit resolution using sources in reverse registration order
-- explicit source selectors remain authoritative
-- preserve source provenance in indexed metadata
+- reference configuration, capabilities, and commands as Scrolls
+- resolve the application graph before runtime startup
+- support child applications through `extends`
+- reject missing parents, cycles, unsupported versions, and ambiguous merges
 
-Examples:
+### 2. Authoritative Node Configuration
+
+Establish `config://shinobi#1.0` as the authoritative desired state for a node.
+
+Requirements:
+
+- versioned schema
+- runtime configuration
+- transport configuration
+- worker/policy configuration
+- environment interpolation for values/secrets
+- no silent structural overrides from environment or CLI
+- validate before startup
+
+### 3. Runtime Boundary
+
+Build the long-running runtime abstraction with OpenSwoole as the initial substrate.
+
+Requirements:
+
+- runtime owns process/event-loop lifecycle
+- transport lifecycle is separate
+- startup occurs only after application/config validation
+- shutdown is explicit
+- no HTTP assumption in the core runtime
+
+### 4. Transport Boundary
+
+Build transport adapters behind configuration.
+
+First target: NATS.
+
+Requirements:
+
+- enable/disable from `config://shinobi`
+- normalize incoming payloads into immutable invocation/event messages
+- resolve capabilities through Codejitsu
+- publish normalized results
+- keep protocol logic out of the Kernel
+
+### 5. Kernel Vertical Slice
+
+Implement:
 
 ```text
-register @global
-register @tenant
-
-config://app
-  → @tenant → @global
-
-config://app@tenant.global
-  → @tenant → @global
-
-config://app@global.tenant
-  → @global → @tenant
+boot
+  -> resolve app://...
+  -> compose
+  -> configure
+  -> run
 ```
 
-### 3. Codex Query and Index
-
-Make lightweight resource metadata a first-class Codex concern.
-
-Requirements:
-
-- `IndexEntry` representation separate from hydrated Scroll instances
-- query by type, name, version, tags, attributes, source, and URI/path
-- preserve source provenance
-- avoid hydrating resources merely to search metadata
-- leave room for full-text and semantic search later
-
-### 4. Resource Graph and References
-
-Make references first-class enough that dependent resources can be inspected before execution.
-
-Examples:
+The first end-to-end proof is:
 
 ```text
-cmd://hello
-  ├── schema://hello
-  └── capability://hello
+NATS
+  ↓
+Invocation
+  ↓
+Shinobi Kernel
+  ↓
+Codejitsu capability
+  ↓
+Result
+  ↓
+NATS
 ```
 
-### 5. Schema/Config/Capability Depth
+### 6. Operational CLI
 
-Strengthen the three initial resource types with richer validation, versioning, composition, and production-grade storage semantics.
+Provide minimal lifecycle/inspection commands:
+
+```text
+shinobi validate app://shinobi#1.0
+shinobi run app://shinobi#1.0
+```
+
+The CLI is an operational interface, not an alternate configuration authority.
 
 ## Next
 
-- first-class `context` Scrolls backed by Markdown content
-- `.context/` discovery/indexing as a normal Codex source
-- first-class Application Scroll resource trees such as `app://archiq/...`
-- formal Scroll identity value object integration
-- stronger Envelope/Scroll serialization contract
-- signed and traceable resource provenance
-- richer discovery/index filters
-- cache persistence drivers
-- resource dependency graph
-- command introspection and generated help
+- richer application resource graph inspection
+- source-aware application/config composition
+- context Scroll integration
+- signed resource provenance
+- durable runtime state and execution tracing
+- outbox/retry/compensation infrastructure
+- additional transports such as HTTP and gRPC
+- worker supervision and isolation
 
 ## Later
 
-- long-running/OpenSwoole execution
-- event/outbox/retry/compensation infrastructure
-- distributed resource/node resolution
-- capability execution substrates beyond PHP
-- ArchIQ integration
-- Shinobi orchestration and cognition layers
-- self-analysis/self-maintenance workflows
+- distributed/service-node discovery
+- cluster orchestration
+- cognition/Satori integration
+- ArchIQ application integration
+- contextual UI
+- self-analysis and self-maintenance workflows
+- autonomous application evolution
+
+## Relationship to Codejitsu
+
+Codejitsu remains independently usable and owns generic resource/discovery/execution primitives. Shinobi consumes those primitives and owns application composition, long-running runtime lifecycle, transports, and platform orchestration.
 
 ## End State
 
-Codejitsu becomes a runtime and resource substrate that can inspect, reason about, execute, validate, and help evolve the systems built on top of it — including itself.
+Shinobi is an application runtime where applications are declaratively composed from Scroll resources, can extend one another through deterministic resource graphs, and can run through configured long-lived runtimes and transports without hard-coded product-specific wiring.
