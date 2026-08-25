@@ -26,4 +26,20 @@ final readonly class Application
             commands: $definition['commands'] ?? [],
         );
     }
+
+    public static function compose(self $parent, self $child): self
+    {
+        return new self(
+            name: $child->name,
+            parent: $child->parent,
+            config: self::merge($parent->config, $child->config),
+            capabilities: self::merge($parent->capabilities, $child->capabilities),
+            commands: self::merge($parent->commands, $child->commands),
+        );
+    }
+
+    private static function merge(array $parent, array $child): array
+    {
+        return array_values(array_unique([...$parent, ...$child]));
+    }
 }
