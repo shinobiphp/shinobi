@@ -1,0 +1,53 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Shinobi;
+
+use RuntimeException;
+
+final class ApplicationResolver
+{
+    /** @param array<string, Application> $applications */
+    public function __construct(private readonly array $applications)
+    {
+    }
+
+    public function resolve(string $uri): Application
+    {
+        return $this->resolveApplication($uri, []);
+    }
+
+    /** @param list<string> $stack */
+    private function resolveApplication(string $uri, array $stack): Application
+    {
+        if (in_array($uri, $stack, true)) {
+            throw new RuntimeException(sprintf('Circular application inheritance detected: %s.', implode(' -> ', [...$stack, $uri])));
+        }
+
+        $application = $this->applications[$uri] ?? null;
+        if ($application === null) {
+            throw new RuntimeException(sprintf('Application not found: %s.', $uri));
+        }
+
+        if ($application->parent === null) {
+            return $application;
+        }
+
+        $parent = $this->resolveApplication($application->parent, [...$stack, $uri]);
+
+        return new Application(
+            name: $application->name,
+            parent: $application->parent,
+            config: $this->merge($parent->config, $application->config),
+            capabilities: $this->merge($parent->capabilities, $application->capabilities),
+            commands: $this->merge($parent->commands, $application->commands),
+        );
+    }
+
+    /** @param list<string> $parent @param list<string> $child @return list<string> */
+    private function merge(array $parent, array $child): array
+    {
+        return array_values(array_unique([...$parent, ...$child]));
+    }
+}
