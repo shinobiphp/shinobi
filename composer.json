@@ -30,6 +30,9 @@
             }
         }
     ],
+"scripts": {
+    "test": "phpunit"
+},
     "config": {
 	"bin-dir": "./bin/",
 	"vendor-dir": "./lib/"
