@@ -17,7 +17,7 @@ final class DeploymentLoaderTest extends TestCase
         self::assertNotFalse($path);
 
         try {
-            Neon::encode([
+            file_put_contents($path, Neon::encode([
                 'version' => '1.0',
                 'bindings' => [
                     [
@@ -27,7 +27,7 @@ final class DeploymentLoaderTest extends TestCase
                         'app' => 'app://shinobi#1.0',
                     ],
                 ],
-            ], Neon::BLOCK | Neon::SPACES, $path);
+            ]));
 
             $deployment = new DeploymentLoader($path)->load();
             $app = new BindingResolver($deployment->bindings)->resolve([
