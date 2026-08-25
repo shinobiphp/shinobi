@@ -36,18 +36,6 @@ final class ApplicationResolver
 
         $parent = $this->resolveApplication($application->parent, [...$stack, $uri]);
 
-        return new Application(
-            name: $application->name,
-            parent: $application->parent,
-            config: $this->merge($parent->config, $application->config),
-            capabilities: $this->merge($parent->capabilities, $application->capabilities),
-            commands: $this->merge($parent->commands, $application->commands),
-        );
-    }
-
-    /** @param list<string> $parent @param list<string> $child @return list<string> */
-    private function merge(array $parent, array $child): array
-    {
-        return array_values(array_unique([...$parent, ...$child]));
+        return Application::compose($parent, $application);
     }
 }
