@@ -8,8 +8,7 @@ use RuntimeException;
 
 final class ApplicationResolver
 {
-    /** @param array<string, Application> $applications */
-    public function __construct(private readonly array $applications)
+    public function __construct(private readonly ApplicationRepository $applications)
     {
     }
 
@@ -25,7 +24,7 @@ final class ApplicationResolver
             throw new RuntimeException(sprintf('Circular application inheritance detected: %s.', implode(' -> ', [...$stack, $uri])));
         }
 
-        $application = $this->applications[$uri] ?? null;
+        $application = $this->applications->find($uri);
         if ($application === null) {
             throw new RuntimeException(sprintf('Application not found: %s.', $uri));
         }
