@@ -1,12 +1,8 @@
 # Shinobi and ArchIQ Direction
 
-Codejitsu is the foundation/runtime, not the final product.
+## Platform Boundary
 
-## Shinobi
-
-Shinobi is the eventual modular platform built above Codejitsu. Its intended concerns include runtime orchestration, service/resource nodes, cognition, capabilities, secure communication, contextual interfaces, and distributed execution.
-
-Codejitsu provides the resource and execution substrate:
+Codejitsu is the generic resource and execution substrate. Shinobi is the long-running application runtime and platform built above it.
 
 ```text
 Codejitsu
@@ -15,51 +11,73 @@ Codejitsu
   ├── URI / Identity
   ├── Discovery
   ├── Resolution
-  ├── Execution
-  └── Runtime
+  ├── Validation
+  └── Execution
         ↓
 Shinobi
-  ├── orchestration
-  ├── cognition
+  ├── application composition
+  ├── runtime lifecycle
+  ├── transports
   ├── service/resource nodes
+  ├── orchestration
   ├── security/governance
-  ├── contextual UI
   └── distributed execution
 ```
 
-The boundary matters: Codejitsu should provide generic primitives while Shinobi composes them into platform behavior.
+Shinobi should add platform behavior without turning Codejitsu's generic resources into an application-specific framework.
+
+## Applications
+
+The application itself is a Scroll resource:
+
+```text
+app://shinobi#1.0
+```
+
+Its manifest composes the resources required to run the application:
+
+```text
+app://shinobi
+  ├── config://shinobi
+  ├── capability://shinobi
+  └── cmd://shinobi
+```
+
+Applications built on Shinobi extend the application graph:
+
+```text
+app://archiq#1.0
+    extends app://shinobi#1.0
+```
+
+ArchIQ therefore inherits the Shinobi runtime contract without Shinobi containing ArchIQ-specific runtime logic.
 
 ## ArchIQ
 
-ArchIQ is the architecture/code intelligence layer that analyzes repositories and produces actionable understanding of structure, dependencies, risks, and modernization paths.
+ArchIQ is the architecture/code intelligence application that analyzes repositories and produces actionable understanding of structure, dependencies, risks, and modernization paths.
 
-The long-term relationship is:
+Its future application graph can add:
 
 ```text
-ArchIQ
-  ↓ analyzes
-Codejitsu / Shinobi systems
-  ↓ produces structured architectural knowledge
-Scrolls / Codex / Context
-  ↓ become machine-addressable knowledge
-Shinobi / agents
-  ↓ use that knowledge
-build, repair, explain, and evolve systems
+app://archiq
+  ├── config://archiq
+  ├── capability://archiq
+  └── cmd://archiq
 ```
 
-ArchIQ should eventually be able to consume multiple languages and repositories, produce normalized graph/analysis resources, and publish useful findings as machine-addressable resources rather than only static reports.
+ArchIQ can consume and produce machine-addressable resources through Codejitsu, allowing analysis findings to participate in the same Codex/resource graph as source configuration and runtime capabilities.
 
 ## Self-Maintaining Goal
 
-The end state is not a chatbot bolted onto a framework. The goal is a system whose architecture, source, resource definitions, analysis, and operational context can all be discovered and reasoned about through the same resource-oriented substrate.
+The end state is a system whose architecture, source, resource definitions, analysis, and operational context can all be discovered and reasoned about through the same substrate.
 
-That enables future agents to:
+Future agents should be able to:
 
-- understand the architecture from repository context
-- inspect the Codex and resource graph
+- resolve the application graph
+- inspect configuration and capabilities
 - analyze source with ArchIQ
-- propose or execute changes through capabilities/commands
+- propose or execute changes through capabilities and commands
 - validate changes against schemas and tests
 - record architectural decisions back into context
 
-This is the beginning of Codejitsu becoming capable of helping build and maintain the ecosystem that contains it.
+The important boundary is that Shinobi knows how to run applications, not how to run individual products such as ArchIQ.
