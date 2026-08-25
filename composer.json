@@ -1,0 +1,42 @@
+{
+    "name": "shinobiphp/shinobi",
+    "description": "Shinobi enterprise capability runtime",
+    "type": "project",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "openswoole/core": "^26.2",
+        "symfony/messenger": "^8.1",
+        "shinobiphp/codejitsu": "^1.0"
+    },
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "Shinobi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Shinobi PHP",
+            "email": "shinobiphp@gmail.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../codejitsu",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
+    "config": {
+	"bin-dir": "./bin/",
+	"vendor-dir": "./lib/"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.0.x-dev"
+        }
+    }
+}
