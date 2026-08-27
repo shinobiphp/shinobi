@@ -9,18 +9,20 @@ final readonly class Application
     private function __construct(
         public string $name,
         public ?string $parent,
+        public ?string $handler,
         public array $config,
         public array $capabilities,
         public array $commands,
     ) {
     }
 
-    /** @param array{name: string, extends?: string, config?: list<string>, capabilities?: list<string>, commands?: list<string>} $definition */
+    /** @param array{name: string, extends?: string, handler?: string, config?: list<string>, capabilities?: list<string>, commands?: list<string>} $definition */
     public static function fromArray(array $definition): self
     {
         return new self(
             name: $definition['name'],
             parent: $definition['extends'] ?? null,
+            handler: $definition['handler'] ?? null,
             config: $definition['config'] ?? [],
             capabilities: $definition['capabilities'] ?? [],
             commands: $definition['commands'] ?? [],
@@ -32,6 +34,7 @@ final readonly class Application
         return new self(
             name: $child->name,
             parent: $child->parent,
+            handler: $child->handler ?? $parent->handler,
             config: self::merge($parent->config, $child->config),
             capabilities: self::merge($parent->capabilities, $child->capabilities),
             commands: self::merge($parent->commands, $child->commands),
