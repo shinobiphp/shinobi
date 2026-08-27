@@ -1,8 +1,8 @@
-# Codejitsu Context
+# Shinobi Context
 
-`.context/` is the durable architectural memory of Codejitsu.
+`.context/` is the durable architectural memory of Shinobi.
 
-It records what the system is, why important design choices exist, the concepts and contracts that connect the pieces, and the direction toward Shinobi and ArchIQ.
+It records what the node is, why important design choices exist, the concepts and contracts that connect the pieces, and the direction toward the Shinobi application ecosystem.
 
 ## Authority
 
