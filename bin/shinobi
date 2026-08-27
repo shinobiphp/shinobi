@@ -1,0 +1,18 @@
+<?php
+
+declare(strict_types=1);
+
+use Codejitsu\Boot;
+use Codejitsu\Scrolls\ScrollCodex;
+
+const SHINOBI_ROOT = __DIR__ . '/..';
+
+require SHINOBI_ROOT . '/lib/autoload.php';
+
+$codex = new ScrollCodex();
+$codejitsuScrolls = SHINOBI_ROOT . '/lib/shinobiphp/codejitsu/scrolls';
+if (is_dir($codejitsuScrolls)) {
+    $codex->load($codejitsuScrolls);
+}
+
+exit(Boot::cli('shinobi', $codex, SHINOBI_ROOT)->run($_SERVER['argv'] ?? []));
