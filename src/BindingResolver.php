@@ -39,12 +39,21 @@ final class BindingResolver
                 continue;
             }
 
-            if (!array_key_exists($key, $endpoint) || $endpoint[$key] !== $value) {
+            if (!array_key_exists($key, $endpoint) || !$this->matchesValue($value, $endpoint[$key])) {
                 return false;
             }
         }
 
         return isset($binding['app']) && is_string($binding['app']);
+    }
+
+    private function matchesValue(mixed $binding, mixed $actual): bool
+    {
+        if (is_array($binding)) {
+            return in_array($actual, $binding, true);
+        }
+
+        return $actual === $binding;
     }
 
     /** @param array<string, mixed> $binding */
