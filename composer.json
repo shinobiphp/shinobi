@@ -7,7 +7,7 @@
     "require": {
         "openswoole/core": "^26.2",
         "symfony/messenger": "^8.1",
-        "shinobiphp/codejitsu": "^1.0",
+        "shinobiphp/codejitsu": "dev-feat/m1-app-spec-composition",
         "nette/neon": "^3.4"
     },
     "license": "proprietary",
@@ -32,7 +32,8 @@
         }
     ],
     "scripts": {
-        "test": "phpunit"
+        "test": "phpunit",
+        "shinobi": "php bin/shinobi"
     },
     "config": {
         "bin-dir": "./bin/",
