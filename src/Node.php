@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Shinobi;
 
 use RuntimeException;
+use Codejitsu\Apps\ApplicationResolver as CodejitsuApplicationResolver;
 
 final class Node
 {
@@ -13,8 +14,7 @@ final class Node
     public function __construct(
         private readonly Deployment $deployment,
         private readonly BindingResolver $bindings,
-        private readonly ApplicationResolver $applications,
-        private readonly ApplicationExecutor $executor,
+        private readonly CodejitsuApplicationResolver $applications,
     ) {
     }
 
@@ -30,7 +30,17 @@ final class Node
             return new HttpResponse(404, ['content-type' => 'text/plain; charset=utf-8'], 'No application is bound to this endpoint.');
         }
 
-        return $this->executor->execute($this->applications->resolve($app), $request);
+        $application = $this->applications->resolve($app);
+        $handler = $application->data['handler'] ?? null;
+        if (!is_string($handler) || trim($handler) === '') {
+            return new HttpResponse(404, ['content-type' => 'text/plain; charset=utf-8'], 'Application has no HTTP handler.');
+        }
+        if (!class_exists($handler)) throw new RuntimeException(sprintf('Application handler not found: %s.', $handler));
+        $callable = new $handler();
+        if (!is_callable($callable)) throw new RuntimeException(sprintf('Application handler is not invokable: %s.', $handler));
+        $response = $callable($request);
+        if (!$response instanceof HttpResponse) throw new RuntimeException(sprintf('Application handler must return %s.', HttpResponse::class));
+        return $response;
     }
 
     public function start(): void
