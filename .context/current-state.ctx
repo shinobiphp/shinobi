@@ -413,3 +413,32 @@ Each step should be independently testable and should avoid pulling later-stage 
 - Prefer deterministic, inspectable commands for ordinary development operations; use agents where they add real value.
 - Require explicit policy/approval boundaries around consequential agent actions.
 - Stop and update `.context/current-state.ctx` after each coherent vertical slice so work can resume without reconstructing state from chat history.
+
+
+## M2 POC Branch — 2026-09-22
+
+Branch: `feat/m2-swoole-app-poc`
+
+Implementation assembled but not yet locally verified.
+
+- Shinobi now targets the Codejitsu M1 App/Spec composition branch during joint development.
+- `Shinobi\\Runtime\\Runtime` loads Shinobi Scroll and App sources into Codejitsu `ScrollCodex`.
+- Application composition/validation is delegated to Codejitsu `ApplicationResolver`; the old Shinobi-local Application/FilesystemApplicationRepository path is no longer used by the POC.
+- `app://shinobi` explicitly conforms to `spec://shinobi/app#1.0.0`.
+- `spec://shinobi/app#1.0.0` requires a capability providing the exact `runtime` contract.
+- `capability://runtime#1.0.0` provides `runtime` and `runtime.openswoole`.
+- `config://shinobi#1.0.0` records the initial OpenSwoole runtime desired state.
+- `bin/shinobi validate|show|run [app://...]` is the initial operational CLI.
+- `run` resolves and validates the complete effective App before constructing/starting an OpenSwoole HTTP server.
+- The POC HTTP handler returns runtime identity, selected Spec, inheritance chain, and request path as JSON.
+
+Still required before claiming the POC green:
+
+1. finish and locally verify Codejitsu M1
+2. `composer update shinobiphp/codejitsu` in Shinobi against the local/path Codejitsu branch
+3. `composer test`
+4. `php bin/shinobi validate app://shinobi`
+5. `php bin/shinobi run app://shinobi` and make a request to the configured listener
+6. fix integration mismatches discovered by those checks
+
+HTTP is only the first proof transport. NATS remains the intended first platform transport after the application/runtime boundary is proven.
