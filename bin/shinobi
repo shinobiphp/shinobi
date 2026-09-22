@@ -1,0 +1,20 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+use Shinobi\Runtime\Runtime;
+require dirname(__DIR__) . '/lib/autoload.php';
+$command = $argv[1] ?? 'help';
+$uri = $argv[2] ?? 'app://shinobi';
+$root = dirname(__DIR__);
+$runtime = new Runtime($root, $_ENV['SHINOBI_HOST'] ?? '127.0.0.1', (int)($_ENV['SHINOBI_PORT'] ?? 9501));
+try {
+    match ($command) {
+        'validate' => print(sprintf("VALID %s\n", $runtime->resolve($uri)->uri)),
+        'show' => print(json_encode($runtime->resolve($uri)->data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . PHP_EOL),
+        'run' => $runtime->run($uri),
+        default => print("Usage: bin/shinobi <validate|show|run> [app://name]\n"),
+    };
+} catch (Throwable $e) {
+    fwrite(STDERR, $e->getMessage() . PHP_EOL);
+    exit(1);
+}
