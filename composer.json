@@ -29,14 +29,25 @@
             "options": {
                 "symlink": true
             }
+        },
+        {
+            "type": "path",
+            "url": "../codejitsu/packages/*",
+            "options": {
+                "symlink": true
+            }
         }
     ],
     "scripts": {
-        "test": "phpunit"
+        "test": "phpunit",
+        "shinobi": "php bin/shinobi"
     },
     "config": {
         "bin-dir": "./bin/",
-        "vendor-dir": "./lib/"
+        "vendor-dir": "./lib/",
+        "allow-plugins": {
+            "codejitsu/composer-plugin": true
+        }
     },
     "extra": {
         "branch-alias": {

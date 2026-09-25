@@ -35,6 +35,51 @@ final class BindingResolverTest extends TestCase
         ]));
     }
 
+    public function testOneBindingCanMatchMultipleHosts(): void
+    {
+        $resolver = new BindingResolver([
+            [
+                'transport' => 'http',
+                'host' => ['shinobiforge.local', 'auth.shinobiforge.local'],
+                'app' => 'app://forge#1.0',
+            ],
+        ]);
+
+        self::assertSame('app://forge#1.0', $resolver->resolve([
+            'transport' => 'http',
+            'host' => 'shinobiforge.local',
+        ]));
+
+        self::assertSame('app://forge#1.0', $resolver->resolve([
+            'transport' => 'http',
+            'host' => 'auth.shinobiforge.local',
+        ]));
+    }
+
+    public function testOneBindingCanMatchMultiplePorts(): void
+    {
+        $resolver = new BindingResolver([
+            [
+                'transport' => 'http',
+                'host' => 'example.com',
+                'port' => [80, 443],
+                'app' => 'app://web#1.0',
+            ],
+        ]);
+
+        self::assertSame('app://web#1.0', $resolver->resolve([
+            'transport' => 'http',
+            'host' => 'example.com',
+            'port' => 80,
+        ]));
+
+        self::assertSame('app://web#1.0', $resolver->resolve([
+            'transport' => 'http',
+            'host' => 'example.com',
+            'port' => 443,
+        ]));
+    }
+
     public function testReturnsNullWhenNothingMatches(): void
     {
         $resolver = new BindingResolver([
