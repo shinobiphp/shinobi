@@ -67,18 +67,25 @@ final class Node
             : '0.0.0.0';
 
         $server = new \OpenSwoole\Http\Server($address, $port);
-        $server->on('request', function (\OpenSwoole\Http\Request $request, \OpenSwoole\Http\Response $response): void {
+        $server->on('request', function (\OpenSwoole\Http\Request $request, \OpenSwoole\Http\Response $response) use ($port): void {
             $host = $request->header['host'] ?? '';
-            [$hostname, $port] = $this->endpoint($host);
-            $result = $this->handle(new HttpRequest(
-                transport: 'http',
-                host: $hostname,
-                port: $port,
-                method: $request->server['request_method'] ?? 'GET',
-                path: $request->server['request_uri'] ?? '/',
-                headers: $request->header ?? [],
-                body: $request->rawcontent() ?: '',
-            ));
+            $hostname = parse_url('http://' . $host, PHP_URL_HOST);
+            $hostname = is_string($hostname) ? $hostname : '';
+            $body = $request->rawcontent();
+            try {
+                $result = $this->handle(new HttpRequest(
+                    transport: 'http',
+                    host: $hostname,
+                    port: $port,
+                    method: $request->server['request_method'] ?? 'GET',
+                    path: $request->server['request_uri'] ?? '/',
+                    headers: $request->header ?? [],
+                    body: is_string($body) ? $body : '',
+                ));
+            } catch (\Throwable $error) {
+                error_log((string) $error);
+                $result = new HttpResponse(500, ['content-type' => 'text/plain; charset=utf-8'], 'Internal Server Error');
+            }
 
             $response->status($result->status);
             foreach ($result->headers as $name => $value) {
@@ -98,20 +105,5 @@ final class Node
         }
 
         $this->server = null;
-    }
-
-    /** @return array{0: string, 1: int} */
-    private function endpoint(string $host): array
-    {
-        if ($host === '') {
-            return ['', 80];
-        }
-
-        $parts = parse_url('http://' . $host);
-        if (!is_array($parts) || !isset($parts['host'])) {
-            return [$host, 80];
-        }
-
-        return [$parts['host'], $parts['port'] ?? 80];
     }
 }

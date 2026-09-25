@@ -6,7 +6,9 @@ require dirname(__DIR__) . '/lib/autoload.php';
 $command = $argv[1] ?? 'help';
 $uri = $argv[2] ?? 'app://shinobi';
 $root = dirname(__DIR__);
-$runtime = new Runtime($root, $_ENV['SHINOBI_HOST'] ?? '127.0.0.1', (int)($_ENV['SHINOBI_PORT'] ?? 9501));
+$host = getenv('SHINOBI_HOST');
+$port = getenv('SHINOBI_PORT');
+$runtime = new Runtime($root, $host === false ? null : $host, $port === false ? null : (int) $port);
 try {
     match ($command) {
         'validate' => print(sprintf("VALID %s\n", $runtime->resolve($uri)->uri)),

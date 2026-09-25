@@ -35,7 +35,7 @@ final class BindingResolver
     private function matches(array $binding, array $endpoint): bool
     {
         foreach ($binding as $key => $value) {
-            if ($key === 'app') {
+            if ($key === 'app' || $key === 'address') {
                 continue;
             }
 
@@ -59,6 +59,6 @@ final class BindingResolver
     /** @param array<string, mixed> $binding */
     private function specificity(array $binding): int
     {
-        return count(array_diff_key($binding, ['app' => true]));
+        return count(array_diff_key($binding, ['app' => true, 'address' => true]));
     }
 }

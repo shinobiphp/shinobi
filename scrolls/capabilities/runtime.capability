@@ -3,4 +3,4 @@ version: 1.0.0
 provides:
     - runtime
     - runtime.openswoole
-target: Shinobi\\Runtime\\Runtime
+target: Shinobi\Runtime\Runtime
